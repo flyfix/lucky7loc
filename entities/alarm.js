@@ -5,7 +5,7 @@ module.exports = {
     this.timestamp = timestamp;;
     this.timeWhenShow = timeWhenShow
     this.creatorWristId = creatorWristId;
-    this.receiverWristId = receiverWristIdi
+    this.receiverWristId = receiverWristId
     this.completed = completed;
   }
 }

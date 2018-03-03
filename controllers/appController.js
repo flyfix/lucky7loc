@@ -22,16 +22,15 @@ module.exports = {
 
   addAlarm: function (req, res) {
     var message = req.body.message
-    var timestamp = req.body.timestamp
     var timeWhenShow = req.body.timeWhenShow;
     var creatorWristId = req.body.creatorWristId
     var receiverWristId = req.body.receiverWristId
 
-    if (message == undefined || timestamp == undefined || creatorWristId == undefined || timeWhenShow == undefined || receiverWristId == undefined  ) {
+    if (message == undefined || creatorWristId == undefined || timeWhenShow == undefined || receiverWristId == undefined  ) {
       res.status(400).end('Incorrect parameters')
       return
     }
-    var newAlarm = new alarm.Alarm(undefined,message,timeWhenShow,timestamp,creatorWristId,receiverWristId,false);
+    var newAlarm = new alarm.Alarm(undefined,message,timeWhenShow,new Date().toLocaleString(),creatorWristId,receiverWristId,false);
     appService.addAlarm(newAlarm, function (err, data) {
       if (err !== null) {
         if (err.code === 409) {
