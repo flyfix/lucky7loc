@@ -41,6 +41,8 @@ module.exports = {
         }
       }
       res.status(201);
+      res.setHeader('Access-Control-Allow-Headers', '*')
+      res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(data.insertedId)).end()
     })
@@ -60,6 +62,8 @@ module.exports = {
       return alarm.receiverWristId === wristId;
     })
     res.status(200);
+    res.setHeader('Access-Control-Allow-Headers', '*')
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(data)).end()
  
