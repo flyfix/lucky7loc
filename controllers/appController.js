@@ -31,6 +31,11 @@ completeAlarm : function(req,res) {
     var timeWhenShow = req.query.timeWhenShow;
     var creatorWristId = req.query.creatorWristId
     var receiverWristId = req.query.receiverWristId
+    console.log(message);
+    console.log(timeWhenShow);
+    console.log(creatorWristId);
+    console.log(receiverWristId);
+
 
     if (message == undefined || creatorWristId == undefined || timeWhenShow == undefined || receiverWristId == undefined  ) {
       res.status(400).end('Incorrect parameters')
@@ -75,6 +80,24 @@ completeAlarm : function(req,res) {
       res.send(JSON.stringify(data)).end()
     })
   },
+
+  getEmergencyAlarms: function (req, res) {
+    console.log("insideEmergency");
+    appService.getAllAlarms(function (err, data) {
+      if (err !== null) {
+        res.status(500, err).end()
+        return
+      }
+      data =data.filter(function(alarm) {
+        return alarm.receiverWristId === null;
+      })
+      res.status(200);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(data)).end()
+    })
+  },
+
+  
 
 
   getLastCords: function (req, res) {

@@ -24,6 +24,9 @@ router.route('/alarms')
 router.route('/alarms/:deviceId')
   .get(appController.get)
 
+router.route('/alarmsemergency')
+  .get(appController.getEmergencyAlarms);
+
 router.route('/devices')
   .get(appController.getDevicesList)
 
