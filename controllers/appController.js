@@ -16,26 +16,35 @@ module.exports = {
     res.setHeader('Content-Type', 'application/json');
     next()
   },
+
 completeAlarm : function(req,res) {
+  console.log(req.query)
   var alarmId = req.query.alarmId;
   if (alarmId === undefined) {
     res.status(400).end()
     return
   }
+
+  appService.completeAlarm (alarmId,  function (err, data) {
+    if (err !== null) {
+      if (err.code === 409) {
+        res.status(409).send(err)
+        return
+      }else {
+        res.status(500).send(err)
+        return
+      }
+    }
   res.status(200);
   res.send(JSON.stringify("Completed alarm")).end()
+})
 },
 
-  addAlarm: function (req, res) {
+  addAlarm : function (req, res) {
     var message = req.query.message
     var timeWhenShow = req.query.timeWhenShow;
     var creatorWristId = req.query.creatorWristId
     var receiverWristId = req.query.receiverWristId
-    console.log(message);
-    console.log(timeWhenShow);
-    console.log(creatorWristId);
-    console.log(receiverWristId);
-
 
     if (message == undefined || creatorWristId == undefined || timeWhenShow == undefined || receiverWristId == undefined  ) {
       res.status(400).end('Incorrect parameters')
@@ -53,28 +62,41 @@ completeAlarm : function(req,res) {
         }
       }
       res.status(201);
-      res.setHeader('Access-Control-Allow-Headers', '*')
-      res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(data.insertedId)).end()
     })
   },
 
   getAllAlarms: function (req, res) {
-    var wristId = req.query.wristId;
-    if (wristId === undefined) {
-      res.status(400).end()
-      return
-    }
  
     appService.getAllAlarms(function (err, data) {
       if (err !== null) {
         res.status(500, err).end()
         return
       }
+      res.status(200);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(data)).end()
+    })
+  },
+
+  getAlarmForReceiver: function (req, res) {
+    var wristId = req.query.wristId;
+    if (wristId === undefined) {
+      res.status(400).end()
+      return
+    }
+    appService.getAllAlarms(function (err, data) {
+      if (err !== null) {
+        res.status(500, err).end()
+        return
+      }
+
       data =data.filter(function(alarm) {
         return alarm.receiverWristId === wristId;
       })
+
+
       res.status(200);
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(data)).end()
@@ -96,9 +118,6 @@ completeAlarm : function(req,res) {
       res.send(JSON.stringify(data)).end()
     })
   },
-
-  
-
 
   getLastCords: function (req, res) {
     var deviceId = req.query.deviceId;

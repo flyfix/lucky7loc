@@ -1,6 +1,7 @@
+var {ObjectId} = require('mongodb'); 
+
 var _connectionString = 'mongodb://team77:team777@ds155218.mlab.com:55218/team77'
 var mongoClient = require('mongodb').MongoClient
-var ObjectId = require('mongodb').ObjectID
 
 function connect (callback) {
   mongoClient.connect(_connectionString, function (err, db) {
@@ -25,6 +26,17 @@ function findDocument (db, collectionName, value, column, callback) {
   db.collection(collectionName).findOne({username: value}, function (err, data) {
     callback(err, data)
   })
+}
+
+function completeAlarm(db,idToComplete,callback) {
+  // var myquery = { _id: ObjectID(idToComplete) };
+  // var newvalues = { $set: {completed: true} };
+  db.collection('alarms').update({'_id':ObjectId(idToComplete)}, {$set: {completed : true}}, {w:1}, function(err, result){
+    callback(err,result);
+  });
+  // db.collection("alarms").updateOne(myquery, newvalues, function(err, result) {
+  //   callback(err,result);
+  // });
 }
 
 function getAll (db, collectionName, callback) {
@@ -56,6 +68,19 @@ module.exports = {
         return
       }
       deleteDocument(db, 'users', id, function (err, result) {
+        db.close()
+        callback(err, result)
+      })
+    })
+  },
+  completeAlarm: function (id, callback) {
+    connect(function (err, db) {
+      if (err !== null) {
+        db.close()
+        callback(err)
+        return
+      }
+      completeAlarm(db, id, function (err, result) {
         db.close()
         callback(err, result)
       })

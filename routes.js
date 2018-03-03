@@ -18,11 +18,11 @@ router.route('/addAlarm')
   router.route('/lastCords')
   .get(appController.getLastCords)
 
-router.route('/alarms')
+router.route('/allalarms')
   .get(appController.getAllAlarms)
 
-router.route('/alarms/:deviceId')
-  .get(appController.get)
+router.route('/alarmsForWrist')
+  .get(appController.getAlarmForReceiver)
 
 router.route('/alarmsemergency')
   .get(appController.getEmergencyAlarms);
@@ -30,7 +30,7 @@ router.route('/alarmsemergency')
 router.route('/devices')
   .get(appController.getDevicesList)
 
-router.route('/alarms/complete')
+  router.route('/alarmscomplete')
   .get(appController.completeAlarm);
 
 
