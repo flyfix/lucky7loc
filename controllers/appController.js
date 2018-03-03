@@ -16,11 +16,19 @@ module.exports = {
     res.setHeader('Content-Type', 'application/json');
     next()
   },
-// completeAlarm : function(req,res) {
-//   var message = req.body.message;
-// },
+completeAlarm : function(req,res) {
+  var alarmId = req.query.alarmId;
+  if (alarmId === undefined) {
+    res.status(400).end()
+    return
+  }
+  res.status(200);
+  res.send(JSON.stringify("Completed alarm")).end()
+},
 
   addAlarm: function (req, res) {
+    console.log(req.body);
+    console.log(req.body);
     var message = req.body.message
     var timeWhenShow = req.body.timeWhenShow;
     var creatorWristId = req.body.creatorWristId

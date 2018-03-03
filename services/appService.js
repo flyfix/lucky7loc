@@ -28,8 +28,6 @@ function findDocument (db, collectionName, value, column, callback) {
 }
 
 function getAll (db, collectionName, callback) {
-  console.log(db);
-  console.log(collectionName);
   db.collection(collectionName).find().toArray(function (err, data) {
     callback(err, data)
   })
