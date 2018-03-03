@@ -1,6 +1,6 @@
 module.exports = {
-    Cord: function (deviceId, timestamp,x, y,z) {
-      this.deviceId = deviceId;
+    Cord: function (beconId, timestamp,x, y,z) {
+      this.beconId = beconId;
       this.timestamp = timestamp;
       this.x = x;
       this.y = y;

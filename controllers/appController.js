@@ -1,10 +1,10 @@
-var express = require('../../node_modules/express')
-var alarm = require('../../entities/alarm')
-var cord = require('../../entities/cord')
-var device = require('../../entities/device')
-var formidable = require('../../node_modules/formidable')
-var cordsService = require('../../services/cordsService')
-var cordsUdpService = require('../../services/cordsUdpService')
+var express = require('../node_modules/express')
+var alarm = require('../entities/alarm')
+var cord = require('../entities/cord')
+var device = require('../entities/device')
+var formidable = require('../node_modules/formidable')
+var cordsService = require('../services/cordsService')
+var cordsUdpService = require('../services/cordsUdpService')
 
 var app = express()
 
@@ -43,13 +43,21 @@ module.exports = {
     // })
   },
 
-  getAll: function (req, res) {
-    console.log('getAll')
-    var alarm1 = new alarm.Alarm("Patient running from hospital",new Date().toLocaleString(),new Date().toLocaleString(),"Igor-Beacon");
-    var alarm2 = new alarm.Alarm("Patient left room",new Date().toLocaleString(),new Date().toLocaleString(),"Adam-Beacon");
-    var alarm3= new alarm.Alarm("Patient left room",new Date().toLocaleString(),new Date().toLocaleString(),"Adam-Beacon");
+  getAllAlarms: function (req, res) {
+    var wristId = req.query.wristId;
+    if (wristId === undefined) {
+      res.status(400).end()
+      return
+    }
+    var alarm1 = new alarm.Alarm(1,"Patient running from hospital",new Date().toLocaleString(),new Date().toLocaleString(),"31364719343730393F0430","wrist1Id","wrist2Id");
+    var alarm2 = new alarm.Alarm(2,"Patient left room",new Date().toLocaleString(),new Date().toLocaleString(),"3136471734373039330380","wrist1Id","wrist2Id");
+    var alarm3= new alarm.Alarm(3,"Apoitment",new Date().toLocaleString(),new Date().toLocaleString(),"3136471734373039330380","wrist2Id","wrist1Id");
     var data = [alarm1,alarm2,alarm3];
-
+    data =data.filter(function(alarm) {
+      return alarm.receiverWristId === wristId;
+    })
+    res.status(200);
+    res.setHeader('Content-Type', 'application/json');
 
     res.send(JSON.stringify(data)).end()
     // cordsService.getAll(function (err, data) {
@@ -62,6 +70,7 @@ module.exports = {
     //   res.send(JSON.stringify(data)).end()
     // })
   },
+
 
   getLastCords: function (req, res) {
     var deviceId = req.query.deviceId;
@@ -76,14 +85,19 @@ module.exports = {
 
     var data = new cord.Cord(deviceId,'2018-03-03 11:03:48',1.200,0.800,5.200);
     console.log(data);
+    res.status(200);
     res.send(data).end()
   },
 
   getDevicesList: function (req, res) {
-    var device1 = new device.Device("31364719343730393F0430","Sleepwalker-Token");
-    var device2 = new device.Device("3136471734373039330380","RobberDockor-Token")
+    var device1 = new device.Device("31364719343730393F0430","wrist1Id","Sleepwalker-Token");
+    var device2 = new device.Device("3136471734373039330380","wrist2Id","RobberDockor-Token")
     var devices = [device1,device2];
-    res.send(devices).end()
+
+    res.status(200);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(devices)).end()
+    return;
   },
 
 

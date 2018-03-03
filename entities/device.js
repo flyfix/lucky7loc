@@ -1,6 +1,7 @@
 module.exports = {
-    Device: function (id,name) {
-     this.id = id;
+    Device: function (beaconId,wristId,name) {
+     this.beaconId = beaconId;
+     this.wristId = wristId;
      this.name = name;
     }
   }

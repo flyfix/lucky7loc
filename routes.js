@@ -1,9 +1,9 @@
 var express = require('express')
-var cordsController = require('./controllers/cords/cordsController')
+var appController = require('./controllers/appController')
 var bodyParser = require('body-parser')
 
 var router = express.Router()
-router.use(cordsController.middleware)
+router.use(appController.middleware)
 
 // support parsing of application/json type post data
 router.use(bodyParser.json())
@@ -12,19 +12,19 @@ router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({ extended: true }))
 
 router.route('/alarms')
-  .post(cordsController.addAlarm)
+  .post(appController.addAlarm)
 
   router.route('/lastCords')
-  .get(cordsController.getLastCords)
+  .get(appController.getLastCords)
 
 router.route('/alarms')
-  .get(cordsController.getAll)
+  .get(appController.getAllAlarms)
 
-router.route('/alarms/:id')
-  .get(cordsController.get)
+router.route('/alarms/:deviceId')
+  .get(appController.get)
 
 router.route('/devices')
-  .get(cordsController.getDevicesList)
+  .get(appController.getDevicesList)
 
 
 module.exports = router

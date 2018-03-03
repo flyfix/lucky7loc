@@ -1,8 +1,10 @@
 module.exports = {
-  Alarm: function (message, timestamp, deviceId,timeWhenShow) {
-    this.message = message
-    this.timestamp = timestamp
+  Alarm: function (id,message,timeWhenShow, timestamp, creatorWristId,receiverWristId) {
+    this.id = id;
+    this.message = message;
+    this.timestamp = timestamp;;
     this.timeWhenShow = timeWhenShow
-    this.deviceId = deviceId;
+    this.creatorWristId = creatorWristId;
+    this.receiverWristId = receiverWristId;
   }
 }
