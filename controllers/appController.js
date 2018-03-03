@@ -27,12 +27,10 @@ completeAlarm : function(req,res) {
 },
 
   addAlarm: function (req, res) {
-    console.log(req.body);
-    console.log(req.body);
-    var message = req.body.message
-    var timeWhenShow = req.body.timeWhenShow;
-    var creatorWristId = req.body.creatorWristId
-    var receiverWristId = req.body.receiverWristId
+    var message = req.query.message
+    var timeWhenShow = req.query.timeWhenShow;
+    var creatorWristId = req.query.creatorWristId
+    var receiverWristId = req.query.receiverWristId
 
     if (message == undefined || creatorWristId == undefined || timeWhenShow == undefined || receiverWristId == undefined  ) {
       res.status(400).end('Incorrect parameters')
