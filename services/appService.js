@@ -1,12 +1,11 @@
-// kotrak
-// kotrak2017
-var _connectionString = 'mongodb://pulpitturysty:Kotrak2016@ds013545.mlab.com:13545/pulpitturysty'
-var _connectionString = 'mongodb://kotrak:Kotrak2017@ds055842.mlab.com:55842/kotrakwebacademy'
+var _connectionString = 'mongodb://team77:team777@ds155218.mlab.com:55218/team77'
 var mongoClient = require('mongodb').MongoClient
 var ObjectId = require('mongodb').ObjectID
 
 function connect (callback) {
+  console.log("Connectin to db");
   mongoClient.connect(_connectionString, function (err, db) {
+    console.log("Connecting to db inside");
     callback(err, db)
   })
 }
@@ -31,54 +30,28 @@ function findDocument (db, collectionName, value, column, callback) {
 }
 
 function getAll (db, collectionName, callback) {
+  console.log(db);
+  console.log(collectionName);
   db.collection(collectionName).find().toArray(function (err, data) {
     callback(err, data)
   })
 }
 
 module.exports = {
-  add: function (data, callback) {
+  addAlarm: function (data, callback) {
     connect(function (err, db) {
       if (err !== null) {
         db.close()
         callback(err)
         return
       }
-
-      findDocument(db, 'users', data.username, 'username', function (err, result) {
-        if (err !== null) {
-          db.close()
-          callback(err, result)
-          return
-        }
-        if (result !== null) {
-          db.close()
-          var error = {message: 'uzytkownik o podanym loginie juz istnieje',code: 409}
-          callback(error)
-          return
-        }
-
-        insertDocument(db, 'users', data, function (err, result) {
+        insertDocument(db, 'alarms', data, function (err, result) {
           db.close()
           callback(err, result)
         })
       })
-    })
   },
 
-  get: function (id, callback) {
-    connect(function (err, db) {
-      if (err !== null) {
-        db.close()
-        callback(err)
-        return
-      }
-      findDocument(db, 'users', new ObjectId(id), '_id', function (err, result) {
-        db.close()
-        callback(err, result)
-      })
-    })
-  },
   delete: function (id, callback) {
     connect(function (err, db) {
       if (err !== null) {
@@ -93,14 +66,14 @@ module.exports = {
     })
   },
 
-  getAll: function (callback) {
+  getAllAlarms: function (callback) {
     connect(function (err, db) {
       if (err !== null) {
         db.close()
         callback(err)
         return
       }
-      getAll(db, 'users', function (err, result) {
+      getAll(db, 'alarms', function (err, result) {
         db.close()
         callback(err, result)
       })

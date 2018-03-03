@@ -3,7 +3,7 @@ var alarm = require('../entities/alarm')
 var cord = require('../entities/cord')
 var device = require('../entities/device')
 var formidable = require('../node_modules/formidable')
-var cordsService = require('../services/cordsService')
+var appService = require('../services/appService')
 var cordsUdpService = require('../services/cordsUdpService')
 
 var app = express()
@@ -11,8 +11,9 @@ var app = express()
 module.exports = {
   middleware: function (req, res, next) {
     console.log(req.method, req.url)
-    res.header('Access-Control-Allow-Headers', '*')
-    // res.header({'Content-Type': 'application/json'})
+    res.setHeader('Access-Control-Allow-Headers', '*')
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.setHeader('Content-Type', 'application/json');
     next()
   },
 
@@ -21,26 +22,28 @@ module.exports = {
     var message = req.body.message
     var timestamp = req.body.timestamp
     var timeWhenShow = req.body.timeWhenShow;
-    var deviceId = req.body.deviceId
+    var creatorWristId = req.body.creatorWristId
+    var receiverWristId = req.body.receiverWristId
 
-    if (message == undefined || timestamp == undefined || deviceId == undefined || timeWhenShow == undefined ) {
+    if (message == undefined || timestamp == undefined || creatorWristId == undefined || timeWhenShow == undefined || receiverWristId == undefined  ) {
       res.status(400).end('Incorrect parameters')
       return
     }
-    var alarm1 = new alarm.Alarm(message,timestamp,timeWhenShow,device);
-    res.status(201).send("Created").end();
-    // cordsService.add(account, function (err, data) {
-    //   if (err !== null) {
-    //     if (err.code === 409) {
-    //       res.status(409).send(err)
-    //       return
-    //     }else {
-    //       res.status(500).send(err)
-    //       return
-    //     }
-    //   }
-    //   res.status(201).send(data.insertedId).end()
-    // })
+    var alarm = new alarm.Alarm(undefined,message,timeWhenShow,timestamp,creatorWristId,receiverWristId);
+    usersService.addAlarm(alarm, function (err, data) {
+      if (err !== null) {
+        if (err.code === 409) {
+          res.status(409).send(err)
+          return
+        }else {
+          res.status(500).send(err)
+          return
+        }
+      }
+      res.status(201);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(data.insertedId)).end()
+    })
   },
 
   getAllAlarms: function (req, res) {
@@ -58,15 +61,18 @@ module.exports = {
     })
     res.status(200);
     res.setHeader('Content-Type', 'application/json');
-
     res.send(JSON.stringify(data)).end()
-    // cordsService.getAll(function (err, data) {
+ 
+    // appService.getAllAlarms(function (err, data) {
     //   if (err !== null) {
     //     res.status(500, err).end()
     //     return
     //   }
-    //   // To moze byc problem ale nie wiem dlaczego niedziala 
-
+    //   data =data.filter(function(alarm) {
+    //     return alarm.receiverWristId === wristId;
+    //   })
+    //   res.status(200);
+    //   res.setHeader('Content-Type', 'application/json');
     //   res.send(JSON.stringify(data)).end()
     // })
   },
@@ -84,9 +90,9 @@ module.exports = {
     var z = Math.round( (Math.random() * 12) + 1,3);
 
     var data = new cord.Cord(deviceId,'2018-03-03 11:03:48',1.200,0.800,5.200);
-    console.log(data);
     res.status(200);
-    res.send(data).end()
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(data)).end()
   },
 
   getDevicesList: function (req, res) {
