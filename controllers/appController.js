@@ -16,9 +16,11 @@ module.exports = {
     res.setHeader('Content-Type', 'application/json');
     next()
   },
+// completeAlarm : function(req,res) {
+//   var message = req.body.message;
+// },
 
   addAlarm: function (req, res) {
-    console.log('body:', req.body)
     var message = req.body.message
     var timestamp = req.body.timestamp
     var timeWhenShow = req.body.timeWhenShow;
@@ -29,8 +31,8 @@ module.exports = {
       res.status(400).end('Incorrect parameters')
       return
     }
-    var alarm = new alarm.Alarm(undefined,message,timeWhenShow,timestamp,creatorWristId,receiverWristId);
-    usersService.addAlarm(alarm, function (err, data) {
+    var newAlarm = new alarm.Alarm(undefined,message,timeWhenShow,timestamp,creatorWristId,receiverWristId,false);
+    appService.addAlarm(newAlarm, function (err, data) {
       if (err !== null) {
         if (err.code === 409) {
           res.status(409).send(err)
@@ -54,31 +56,19 @@ module.exports = {
       res.status(400).end()
       return
     }
-    var alarm1 = new alarm.Alarm(1,"Patient running from hospital",new Date().toLocaleString(),new Date().toLocaleString(),"31364719343730393F0430","wrist1Id","wrist2Id");
-    var alarm2 = new alarm.Alarm(2,"Patient left room",new Date().toLocaleString(),new Date().toLocaleString(),"3136471734373039330380","wrist1Id","wrist2Id");
-    var alarm3= new alarm.Alarm(3,"Apoitment",new Date().toLocaleString(),new Date().toLocaleString(),"3136471734373039330380","wrist2Id","wrist1Id");
-    var data = [alarm1,alarm2,alarm3];
-    data =data.filter(function(alarm) {
-      return alarm.receiverWristId === wristId;
-    })
-    res.status(200);
-    res.setHeader('Access-Control-Allow-Headers', '*')
-    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(data)).end()
  
-    // appService.getAllAlarms(function (err, data) {
-    //   if (err !== null) {
-    //     res.status(500, err).end()
-    //     return
-    //   }
-    //   data =data.filter(function(alarm) {
-    //     return alarm.receiverWristId === wristId;
-    //   })
-    //   res.status(200);
-    //   res.setHeader('Content-Type', 'application/json');
-    //   res.send(JSON.stringify(data)).end()
-    // })
+    appService.getAllAlarms(function (err, data) {
+      if (err !== null) {
+        res.status(500, err).end()
+        return
+      }
+      data =data.filter(function(alarm) {
+        return alarm.receiverWristId === wristId;
+      })
+      res.status(200);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(data)).end()
+    })
   },
 
 

@@ -3,9 +3,7 @@ var mongoClient = require('mongodb').MongoClient
 var ObjectId = require('mongodb').ObjectID
 
 function connect (callback) {
-  console.log("Connectin to db");
   mongoClient.connect(_connectionString, function (err, db) {
-    console.log("Connecting to db inside");
     callback(err, db)
   })
 }
