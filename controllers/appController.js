@@ -46,7 +46,7 @@ completeAlarm : function(req,res) {
     var creatorWristId = req.query.creatorWristId
     var receiverWristId = req.query.receiverWristId
 
-    if (message == undefined || creatorWristId == undefined || timeWhenShow == undefined || receiverWristId == undefined  ) {
+    if (message == undefined || creatorWristId == undefined || timeWhenShow == undefined  ) {
       res.status(400).end('Incorrect parameters')
       return
     }
