@@ -118,6 +118,22 @@ completeAlarm : function(req,res) {
       res.send(JSON.stringify(data)).end()
     })
   },
+  getDeviceLastCords : function (req, res) {
+    var deviceId = req.query.deviceId;
+    if (deviceId === undefined) {
+      res.status(400).end()
+      return
+    }
+    appService.getLastPosition(deviceId,function (err, data) {
+      if (err !== null) {
+        res.status(500, err).end()
+        return
+      }
+      res.status(200);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(data)).end()
+    })
+  },
 
   getLastCords: function (req, res) {
     var deviceId = req.query.deviceId;

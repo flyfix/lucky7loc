@@ -28,6 +28,16 @@ function findDocument (db, collectionName, value, column, callback) {
   })
 }
 
+function getLastPosition (db, deviceId, callback) {
+  console.log("lastposition");
+  db.collection("cords").find({ beconId: deviceId}).sort({timestamp:-1}).limit(1).toArray(function (err, data) {
+    callback(err, data)
+  });
+  // db.collection("cords").find({}, { beconId: deviceId}).sort({timestamp:1}).limit(1).toArray(function (err, data) {
+  //   callback(err, data)
+  // });
+}
+
 function completeAlarm(db,idToComplete,callback) {
   // var myquery = { _id: ObjectID(idToComplete) };
   // var newvalues = { $set: {completed: true} };
@@ -73,6 +83,20 @@ module.exports = {
       })
     })
   },
+  getLastPosition : function (id, callback) {
+    connect(function (err, db) {
+      if (err !== null) {
+        db.close()
+        callback(err)
+        return
+      }
+      getLastPosition(db, id, function (err, result) {
+        db.close()
+        callback(err, result)
+      })
+    })
+  },
+
   completeAlarm: function (id, callback) {
     connect(function (err, db) {
       if (err !== null) {
