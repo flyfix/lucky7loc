@@ -20,6 +20,9 @@ router.route('/addAlarm')
 
   router.route('/deviceLastCord')
   .get(appController.getDeviceLastCords)
+  
+  router.route('/devicesLastCords')
+  .get(appController.getLastCordsForAll)
 
 router.route('/allalarms')
   .get(appController.getAllAlarms)

@@ -33,9 +33,18 @@ function getLastPosition (db, deviceId, callback) {
   db.collection("cords").find({ beconId: deviceId}).sort({timestamp:-1}).limit(1).toArray(function (err, data) {
     callback(err, data)
   });
-  // db.collection("cords").find({}, { beconId: deviceId}).sort({timestamp:1}).limit(1).toArray(function (err, data) {
-  //   callback(err, data)
-  // });
+}
+function getLastPositionForAll (db, callback) {
+  var all = [];
+
+  db.collection("cords").find({ beconId: "31364719343730393F0430"}).sort({timestamp:-1}).limit(1).toArray(function (err, data) {
+    all.push(data);
+    db.collection("cords").find({ beconId: "3136471734373039330380"}).sort({timestamp:-1}).limit(1).toArray(function (err, data) {
+      all.push(data);
+      callback(err, all)
+    });
+
+  });
 }
 
 function completeAlarm(db,idToComplete,callback) {
@@ -91,6 +100,19 @@ module.exports = {
         return
       }
       getLastPosition(db, id, function (err, result) {
+        db.close()
+        callback(err, result)
+      })
+    })
+  },
+  getLastPositionForAll : function (callback) {
+    connect(function (err, db) {
+      if (err !== null) {
+        db.close()
+        callback(err)
+        return
+      }
+      getLastPositionForAll(db, function (err, result) {
         db.close()
         callback(err, result)
       })

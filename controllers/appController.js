@@ -36,7 +36,7 @@ completeAlarm : function(req,res) {
       }
     }
   res.status(200);
-  res.send(JSON.stringify("Completed alarm")).end()
+  res.send().end()
 })
 },
 
@@ -125,6 +125,34 @@ completeAlarm : function(req,res) {
       return
     }
     appService.getLastPosition(deviceId,function (err, data) {
+      if (err !== null) {
+        res.status(500, err).end()
+        return
+      }
+      res.status(200);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(data)).end()
+    })
+  },
+  
+  getDeviceLastCords : function (req, res) {
+    var deviceId = req.query.deviceId;
+    if (deviceId === undefined) {
+      res.status(400).end()
+      return
+    }
+    appService.getLastPosition(deviceId,function (err, data) {
+      if (err !== null) {
+        res.status(500, err).end()
+        return
+      }
+      res.status(200);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(data)).end()
+    })
+  },
+  getLastCordsForAll : function (req, res) {
+    appService.getLastPositionForAll(function (err, data) {
       if (err !== null) {
         res.status(500, err).end()
         return
